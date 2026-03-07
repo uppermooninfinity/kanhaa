@@ -1,89 +1,98 @@
 import time
 import random
 import asyncio
-from pyrogram import filters, Client
-from pyrogram.enums import ChatType
-from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
-from youtubesearchpython.__future__ import VideosSearch
-from Clonify import app
 
-from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, InputMediaPhoto
-import config
-# from Clonify import app
+from pyrogram import filters, Client
+from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
+
+from youtubesearchpython.__future__ import VideosSearch
+
+from Clonify import app
 from Clonify.misc import _boot_
-from Clonify.plugins.sudo.sudoers import sudoers_list
-from Clonify.utils.database import get_served_chats, get_served_users, get_sudoers
-from Clonify.utils import bot_sys_stats
+
 from Clonify.utils.database import (
     add_served_chat_clone,
     add_served_user_clone,
-    blacklisted_chats,
-    get_lang,
-    is_banned_user,
-    is_on_off,
 )
+
 from Clonify.utils.decorators.language import LanguageStart
 from Clonify.utils.formatters import get_readable_time
-from Clonify.utils.inline import help_pannel, private_panel, start_panel
-from config import BANNED_USERS, OWNER_ID, STREAMI_PICS
+from Clonify.utils.inline import help_pannel
+
+from config import BANNED_USERS, STREAMI_PICS
 from strings import get_string
 
-from Clonify.utils.database.clonedb import get_owner_id_from_db, get_cloned_support_chat, get_cloned_support_channel
+from Clonify.utils.database.clonedb import (
+    get_owner_id_from_db,
+    get_cloned_support_chat,
+    get_cloned_support_channel,
+)
 
 from Clonify.cplugin.setinfo import get_logging_status, get_log_channel
+from Clonify.core.mongo import mongodb
 
-#--------------------------
+
+startdb = mongodb.clonestart
+
+
+# =========================
+# PRIVATE START
+# =========================
 
 
 @Client.on_message(filters.command(["start"]) & filters.private & ~BANNED_USERS)
 @LanguageStart
 async def start_pm(client, message: Message, _):
-    a = await client.get_me()
-    # await add_served_user_clone(message.from_user.id)
-    bot_id = a.id
+
+    bot = await client.get_me()
+    bot_id = bot.id
+
     await add_served_user_clone(message.from_user.id, bot_id)
 
-    loading_1 = await message.reply_text("⚡")
-    C_BOT_OWNER_ID = get_owner_id_from_db(a.id)
-    # await asyncio.sleep(0.2)
-    
-    await loading_1.edit_text("<b>ʟᴏᴀᴅɪɴɢ</b>")
-    C_BOT_SUPPORT_CHAT = await get_cloned_support_chat(a.id)
-    C_SUPPORT_CHAT = f"https://t.me/{C_BOT_SUPPORT_CHAT}"
-    # await asyncio.sleep(0.1)
-    await loading_1.edit_text("<b>ʟᴏᴀᴅɪɴɢ.</b>")
-    C_BOT_SUPPORT_CHANNEL = await get_cloned_support_channel(a.id)
-    C_SUPPORT_CHANNEL = f"https://t.me/{C_BOT_SUPPORT_CHANNEL}"
-    # await asyncio.sleep(0.1)
-    await loading_1.edit_text("<b>ʟᴏᴀᴅɪɴɢ..</b>")
-    await asyncio.sleep(0.1)
-    await loading_1.edit_text("<b>ʟᴏᴀᴅɪɴɢ...</b>")
-    await asyncio.sleep(0.1)
-    await loading_1.delete()
+    # Loading animation
+    msg = await message.reply_text("⚡")
+    for i in ["ʟᴏᴀᴅɪɴɢ", "ʟᴏᴀᴅɪɴɢ.", "ʟᴏᴀᴅɪɴɢ..", "ʟᴏᴀᴅɪɴɢ..."]:
+        await msg.edit_text(f"<b>{i}</b>")
+        await asyncio.sleep(0.2)
+    await msg.delete()
 
+    # Owner
+    OWNER = get_owner_id_from_db(bot_id)
 
-    #Cloned Bot Support Chat and channel
+    # Support Chat
+    SUPPORT_CHAT = await get_cloned_support_chat(bot_id)
+    SUPPORT_CHAT = f"https://t.me/{SUPPORT_CHAT}"
 
-    #new ------
+    # Support Channel
+    SUPPORT_CHANNEL = await get_cloned_support_channel(bot_id)
+    SUPPORT_CHANNEL = f"https://t.me/{SUPPORT_CHANNEL}"
+
+    # START ARGUMENTS
     if len(message.text.split()) > 1:
+
         name = message.text.split(None, 1)[1]
-        if name[0:4] == "help":
+
+        if name.startswith("help"):
+
             keyboard = help_pannel(_)
+
             return await message.reply_photo(
                 random.choice(STREAMI_PICS),
-                caption=_["help_1"].format(C_SUPPORT_CHAT),
+                caption=_["help_1"].format(SUPPORT_CHAT),
                 reply_markup=keyboard,
             )
-        if name[0:3] == "sud":
-            await sudoers_list(client=client, message=message, _=_)
 
-            return
-        if name[0:3] == "inf":
+        if name.startswith("info"):
+
             m = await message.reply_text("🔎")
-            query = (str(name)).replace("info_", "", 1)
+
+            query = name.replace("info_", "", 1)
             query = f"https://www.youtube.com/watch?v={query}"
+
             results = VideosSearch(query, limit=1)
+
             for result in (await results.next())["result"]:
+
                 title = result["title"]
                 duration = result["duration"]
                 views = result["viewCount"]["short"]
@@ -92,94 +101,159 @@ async def start_pm(client, message: Message, _):
                 channel = result["channel"]["name"]
                 link = result["link"]
                 published = result["publishedTime"]
-            searched_text = _["start_6"].format(
-                title, duration, views, published, channellink, channel, a.mention
+
+            text = _["start_6"].format(
+                title,
+                duration,
+                views,
+                published,
+                channellink,
+                channel,
+                bot.mention,
             )
+
             key = InlineKeyboardMarkup(
                 [
                     [
-                        InlineKeyboardButton(text=_["S_B_8"], url=link),
-                        InlineKeyboardButton(text=_["S_B_9"], url=C_SUPPORT_CHAT),
-                    ],
+                        InlineKeyboardButton("Watch", url=link),
+                        InlineKeyboardButton("Support", url=SUPPORT_CHAT),
+                    ]
                 ]
             )
+
             await m.delete()
-            await client.send_photo(
-                chat_id=message.chat.id,
-                photo=thumbnail,
-                caption=searched_text,
+
+            return await client.send_photo(
+                message.chat.id,
+                thumbnail,
+                caption=text,
                 reply_markup=key,
             )
-    
-    else:
-        out = [
+
+    # =====================
+    # MAIN START PANEL
+    # =====================
+
+    buttons = [
         [
             InlineKeyboardButton(
-                text=_["S_B_3"],
-                url=f"https://t.me/{a.username}?startgroup=true",
+                "➕ Add Me To Group",
+                url=f"https://t.me/{bot.username}?startgroup=true",
             )
         ],
         [
-            InlineKeyboardButton(text=_["C_B_2"], user_id=C_BOT_OWNER_ID),
-            InlineKeyboardButton(text=_["S_B_6"], url=C_SUPPORT_CHANNEL),
+            InlineKeyboardButton("Owner", user_id=OWNER),
+            InlineKeyboardButton("Channel", url=SUPPORT_CHANNEL),
         ],
         [
-            InlineKeyboardButton(text=_["S_B_4"], callback_data="settings_back_helper"),
+            InlineKeyboardButton("Settings", callback_data="settings_back_helper"),
         ],
     ]
-        
-        app_name = app.name
-        app_link = f"https://t.me/{app.username}"
 
-        # out = private_panel(_)
+    data = await startdb.find_one({"bot_id": bot_id})
+
+    if data:
+
+        text = data.get("text")
+        photo = data.get("photo")
+        video = data.get("video")
+
+        if photo:
+
+            await message.reply_photo(
+                photo,
+                caption=text,
+                reply_markup=InlineKeyboardMarkup(buttons),
+            )
+
+        elif video:
+
+            await message.reply_video(
+                video,
+                caption=text,
+                reply_markup=InlineKeyboardMarkup(buttons),
+            )
+
+        else:
+
+            await message.reply_text(
+                text,
+                reply_markup=InlineKeyboardMarkup(buttons),
+            )
+
+    else:
+
         await message.reply_photo(
             random.choice(STREAMI_PICS),
-            caption=_["c_start_2"].format(message.from_user.mention, a.mention, app_name, app_link, app_name, app_link, C_SUPPORT_CHANNEL, C_SUPPORT_CHAT),
-            reply_markup=InlineKeyboardMarkup(out),
+            caption=_["c_start_2"].format(
+                message.from_user.mention,
+                bot.mention,
+                app.name,
+                f"https://t.me/{app.username}",
+                app.name,
+                f"https://t.me/{app.username}",
+                SUPPORT_CHANNEL,
+                SUPPORT_CHAT,
+            ),
+            reply_markup=InlineKeyboardMarkup(buttons),
         )
 
-        C_LOG_STATUS = get_logging_status(bot_id)  # Logging check
-        C_LOGGER_ID = get_log_channel(bot_id)  # Get log channel ID
+    # =====================
+    # LOGGING
+    # =====================
 
-        if C_LOG_STATUS:  # Agar logging enabled hai
-            if str(C_LOGGER_ID) == "-100":  # Agar log channel set nahi hai
-                C_LOGGER_ID = C_BOT_OWNER_ID  # Owner ID use karo
+    LOG_STATUS = get_logging_status(bot_id)
+    LOGGER_ID = get_log_channel(bot_id)
 
-            try:
-                await client.send_message(
-                    chat_id=int(C_LOGGER_ID),  # Log channel ya Owner ID pe bhejo
-                    text=f"✦ {message.from_user.mention} ᴊᴜsᴛ sᴛᴀʀᴛᴇᴅ ᴛʜᴇ ʙᴏᴛ.\n\n"
-                        f"✦ <b>ᴜsᴇʀ ɪᴅ ➠</b> <code>{message.from_user.id}</code>\n"
-                        f"✦ <b>ᴜsᴇʀɴᴀᴍᴇ ➠</b> @{message.from_user.username}",
-                )
-            except Exception as e:
-                print(f"[ERROR] Failed to send log message: {e}")  # Error print kro, bot rukega nahi
+    if LOG_STATUS:
+
+        if str(LOGGER_ID) == "-100":
+            LOGGER_ID = OWNER
+
+        try:
+
+            await client.send_message(
+                chat_id=int(LOGGER_ID),
+                text=f"✦ {message.from_user.mention} started the bot\n\n"
+                f"User ID: `{message.from_user.id}`\n"
+                f"Username: @{message.from_user.username}",
+            )
+
+        except Exception as e:
+            print(f"[LOG ERROR] {e}")
+
+
+# =========================
+# GROUP START
+# =========================
 
 
 @Client.on_message(filters.command(["start"]) & filters.group & ~BANNED_USERS)
 @LanguageStart
-async def start_gp(client, message: Message, _):
-    a = await client.get_me()
-    #Cloned Bot Support Chat and channel
-    C_BOT_SUPPORT_CHAT = await get_cloned_support_chat(a.id)
-    C_SUPPORT_CHAT = f"https://t.me/{C_BOT_SUPPORT_CHAT}"
-    C_BOT_SUPPORT_CHANNEL = await get_cloned_support_channel(a.id)
-    C_SUPPORT_CHANNEL = f"https://t.me/{C_BOT_SUPPORT_CHANNEL}"
-    # out = start_panel(_)
-    out = [
-                    [
-                        InlineKeyboardButton(
-                            text=_["S_B_1"], url=f"https://t.me/{a.username}?startgroup=true"
-                        ),
-                        InlineKeyboardButton(text=_["S_B_2"], url=C_SUPPORT_CHAT),
-                    ],
-                ]
+async def start_group(client, message: Message, _):
+
+    bot = await client.get_me()
+    bot_id = bot.id
+
+    SUPPORT_CHAT = await get_cloned_support_chat(bot_id)
+    SUPPORT_CHAT = f"https://t.me/{SUPPORT_CHAT}"
+
+    buttons = [
+        [
+            InlineKeyboardButton(
+                "➕ Add Me",
+                url=f"https://t.me/{bot.username}?startgroup=true",
+            ),
+            InlineKeyboardButton("Support", url=SUPPORT_CHAT),
+        ]
+    ]
+
     uptime = int(time.time() - _boot_)
+
     await message.reply_photo(
         random.choice(STREAMI_PICS),
-        caption=_["start_1"].format(a.mention, get_readable_time(uptime)),
-        reply_markup=InlineKeyboardMarkup(out),
+        caption=_["start_1"].format(bot.mention, get_readable_time(uptime)),
+        reply_markup=InlineKeyboardMarkup(buttons),
     )
-    # return await add_served_chat_clone(message.chat.id)
-    bot_id = a.id
-    return await add_served_chat_clone(message.chat.id, bot_id)
+
+    await add_served_chat_clone(message.chat.id, bot_id)
