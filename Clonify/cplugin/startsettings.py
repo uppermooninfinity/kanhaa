@@ -1,8 +1,8 @@
 from pyrogram import filters
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from Clonify import app
-from Clonify.core.clone import get_owner_id_from_db
 from Clonify.core.mongo import mongodb
+from config import OWNER_ID
 
 startdb = mongodb.clonestart
 
@@ -50,12 +50,11 @@ async def start_cmd(client, message):
 @app.on_message(filters.command("setstarttext") & filters.private)
 async def set_start_text(client, message):
 
+    if message.from_user.id != OWNER_ID:
+        return await message.reply("Only bot owner can use this")
+
     bot = await client.get_me()
     bot_id = bot.id
-    owner = get_owner_id_from_db(bot_id)
-
-    if message.from_user.id != owner:
-        return await message.reply("Only bot owner can use this")
 
     if len(message.command) < 2:
         return await message.reply("Use: /setstarttext your text")
@@ -75,12 +74,11 @@ async def set_start_text(client, message):
 @app.on_message(filters.command("setstartpic") & filters.private)
 async def set_start_pic(client, message):
 
+    if message.from_user.id != OWNER_ID:
+        return
+
     bot = await client.get_me()
     bot_id = bot.id
-    owner = get_owner_id_from_db(bot_id)
-
-    if message.from_user.id != owner:
-        return
 
     if not message.reply_to_message or not message.reply_to_message.photo:
         return await message.reply("Reply to a photo")
@@ -100,12 +98,11 @@ async def set_start_pic(client, message):
 @app.on_message(filters.command("setstartvideo") & filters.private)
 async def set_start_video(client, message):
 
+    if message.from_user.id != OWNER_ID:
+        return
+
     bot = await client.get_me()
     bot_id = bot.id
-    owner = get_owner_id_from_db(bot_id)
-
-    if message.from_user.id != owner:
-        return
 
     if not message.reply_to_message or not message.reply_to_message.video:
         return await message.reply("Reply to a video")
@@ -125,12 +122,11 @@ async def set_start_video(client, message):
 @app.on_message(filters.command("setstartgif") & filters.private)
 async def set_start_gif(client, message):
 
+    if message.from_user.id != OWNER_ID:
+        return
+
     bot = await client.get_me()
     bot_id = bot.id
-    owner = get_owner_id_from_db(bot_id)
-
-    if message.from_user.id != owner:
-        return
 
     if not message.reply_to_message or not message.reply_to_message.animation:
         return await message.reply("Reply to a GIF")
@@ -150,12 +146,11 @@ async def set_start_gif(client, message):
 @app.on_message(filters.command("setstartbuttons") & filters.private)
 async def set_buttons(client, message):
 
+    if message.from_user.id != OWNER_ID:
+        return
+
     bot = await client.get_me()
     bot_id = bot.id
-    owner = get_owner_id_from_db(bot_id)
-
-    if message.from_user.id != owner:
-        return
 
     if len(message.command) < 3:
         return await message.reply(
@@ -217,12 +212,11 @@ async def preview_start(client, message):
 @app.on_message(filters.command("resetstart") & filters.private)
 async def reset_start(client, message):
 
+    if message.from_user.id != OWNER_ID:
+        return
+
     bot = await client.get_me()
     bot_id = bot.id
-    owner = get_owner_id_from_db(bot_id)
-
-    if message.from_user.id != owner:
-        return
 
     await startdb.delete_one({"bot_id": bot_id})
 
