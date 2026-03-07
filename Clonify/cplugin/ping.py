@@ -5,47 +5,68 @@ import psutil
 from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
 
-from config import SUPPORT_CHAT, PING_IMG_URL
-from .utils import StartTime
+from config import PING_IMG_URL
 from Clonify.utils import get_readable_time
-from Clonify.utils.database.clonedb import get_owner_id_from_db, get_cloned_support_chat, get_cloned_support_channel
+from Clonify.utils.database.clonedb import (
+    get_owner_id_from_db,
+    get_cloned_support_chat,
+    get_cloned_support_channel,
+)
+from Clonify.plugins.utils import StartTime
 
 
 @Client.on_message(filters.command("ping"))
 async def ping_clone(client: Client, message: Message):
+
     bot = await client.get_me()
 
+    # owner id
     C_BOT_OWNER_ID = get_owner_id_from_db(bot.id)
 
-    #Cloned Bot Support Chat and channel
+    # support chat
     C_BOT_SUPPORT_CHAT = await get_cloned_support_chat(bot.id)
-    C_SUPPORT_CHAT = f"https://t.me/{C_BOT_SUPPORT_CHAT}"
-    C_BOT_SUPPORT_CHANNEL = await get_cloned_support_channel(bot.id)
-    C_SUPPORT_CHANNEL = f"https://t.me/{C_BOT_SUPPORT_CHANNEL}"
 
-    hmm = await message.reply_photo(
-        photo=PING_IMG_URL, caption=f"{bot.mention} ɪs ᴘɪɴɢɪɴɢ..."
+    if C_BOT_SUPPORT_CHAT:
+        C_SUPPORT_CHAT = f"https://t.me/{C_BOT_SUPPORT_CHAT}"
+    else:
+        C_SUPPORT_CHAT = "https://t.me/telegram"
+
+    # ping message
+    msg = await message.reply_photo(
+        photo=PING_IMG_URL,
+        caption=f"{bot.mention} is pinging..."
     )
-    upt = int(time.time() - StartTime)
+
+    # system stats
+    uptime_sec = int(time.time() - StartTime)
+    uptime = get_readable_time(uptime_sec)
+
     cpu = psutil.cpu_percent(interval=0.5)
     mem = psutil.virtual_memory().percent
     disk = psutil.disk_usage("/").percent
+
     start = datetime.now()
-    resp = (datetime.now() - start).microseconds / 1000
-    uptime = get_readable_time((upt))
+    end = datetime.now()
+    resp = (end - start).microseconds / 1000
 
-    await hmm.edit_text(
-        f"""➻ ᴩᴏɴɢ : `{resp}ᴍs`
+    # edit message
+    await msg.edit_text(
+        f"""🏓 **Pong:** `{resp} ms`
 
-<b><u>{bot.mention} sʏsᴛᴇᴍ sᴛᴀᴛs :</u></b>
+**{bot.mention} System Stats**
 
-๏ **ᴜᴩᴛɪᴍᴇ :** {uptime}
-๏ **ʀᴀᴍ :** {mem}
-๏ **ᴄᴩᴜ :** {cpu}
-๏ **ᴅɪsᴋ :** {disk}""",
+• **Uptime:** {uptime}  
+• **CPU:** {cpu}%  
+• **RAM:** {mem}%  
+• **Disk:** {disk}%""",
         reply_markup=InlineKeyboardMarkup(
             [
-                [InlineKeyboardButton("sᴜᴘᴘᴏʀᴛ", url=C_SUPPORT_CHAT)],
+                [
+                    InlineKeyboardButton(
+                        "Support",
+                        url=C_SUPPORT_CHAT
+                    )
+                ]
             ]
         ),
     )
