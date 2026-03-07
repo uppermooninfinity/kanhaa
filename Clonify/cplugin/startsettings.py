@@ -6,17 +6,61 @@ from Clonify.core.mongo import mongodb
 
 startdb = mongodb.clonestart
 
-# SAVE TEXT
+
+# START COMMAND
+@app.on_message(filters.command("start"))
+async def start_cmd(client, message):
+
+    bot = await client.get_me()
+    bot_id = bot.id
+
+    data = await startdb.find_one({"bot_id": bot_id})
+
+    if not data:
+        return await message.reply("Bot Started Successfully")
+
+    text = data.get("text")
+    photo = data.get("photo")
+    video = data.get("video")
+    gif = data.get("gif")
+    buttons = data.get("buttons")
+
+    keyboard = None
+
+    if buttons:
+        btn = []
+        for b in buttons:
+            btn.append([InlineKeyboardButton(b["name"], url=b["url"])])
+        keyboard = InlineKeyboardMarkup(btn)
+
+    if photo:
+        await message.reply_photo(photo, caption=text, reply_markup=keyboard)
+
+    elif video:
+        await message.reply_video(video, caption=text, reply_markup=keyboard)
+
+    elif gif:
+        await message.reply_animation(gif, caption=text, reply_markup=keyboard)
+
+    else:
+        await message.reply(text, reply_markup=keyboard)
+
+
+# SET START TEXT
 @app.on_message(filters.command("setstarttext") & filters.private)
 async def set_start_text(client, message):
 
-    bot_id = client.me.id
+    bot = await client.get_me()
+    bot_id = bot.id
     owner = get_owner_id_from_db(bot_id)
 
     if message.from_user.id != owner:
         return await message.reply("Only bot owner can use this")
 
-    text = message.text.split(None,1)[1]
+    if len(message.command) < 2:
+        return await message.reply("Use: /setstarttext your text")
+
+    text = message.text.split(None, 1)[1]
 
     await startdb.update_one(
         {"bot_id": bot_id},
@@ -27,17 +71,18 @@ async def set_start_text(client, message):
     await message.reply("✅ Start text saved")
 
 
-# SAVE PHOTO
+# SET PHOTO
 @app.on_message(filters.command("setstartpic") & filters.private)
 async def set_start_pic(client, message):
 
-    bot_id = client.me.id
+    bot = await client.get_me()
+    bot_id = bot.id
     owner = get_owner_id_from_db(bot_id)
 
     if message.from_user.id != owner:
         return
 
-    if not message.reply_to_message.photo:
+    if not message.reply_to_message or not message.reply_to_message.photo:
         return await message.reply("Reply to a photo")
 
     file_id = message.reply_to_message.photo.file_id
@@ -51,17 +96,18 @@ async def set_start_pic(client, message):
     await message.reply("✅ Start photo saved")
 
 
-# SAVE VIDEO
+# SET VIDEO
 @app.on_message(filters.command("setstartvideo") & filters.private)
 async def set_start_video(client, message):
 
-    bot_id = client.me.id
+    bot = await client.get_me()
+    bot_id = bot.id
     owner = get_owner_id_from_db(bot_id)
 
     if message.from_user.id != owner:
         return
 
-    if not message.reply_to_message.video:
+    if not message.reply_to_message or not message.reply_to_message.video:
         return await message.reply("Reply to a video")
 
     file_id = message.reply_to_message.video.file_id
@@ -75,11 +121,75 @@ async def set_start_video(client, message):
     await message.reply("✅ Start video saved")
 
 
+# SET GIF
+@app.on_message(filters.command("setstartgif") & filters.private)
+async def set_start_gif(client, message):
+
+    bot = await client.get_me()
+    bot_id = bot.id
+    owner = get_owner_id_from_db(bot_id)
+
+    if message.from_user.id != owner:
+        return
+
+    if not message.reply_to_message or not message.reply_to_message.animation:
+        return await message.reply("Reply to a GIF")
+
+    file_id = message.reply_to_message.animation.file_id
+
+    await startdb.update_one(
+        {"bot_id": bot_id},
+        {"$set": {"gif": file_id}},
+        upsert=True
+    )
+
+    await message.reply("✅ Start GIF saved")
+
+
+# SET BUTTONS
+@app.on_message(filters.command("setstartbuttons") & filters.private)
+async def set_buttons(client, message):
+
+    bot = await client.get_me()
+    bot_id = bot.id
+    owner = get_owner_id_from_db(bot_id)
+
+    if message.from_user.id != owner:
+        return
+
+    if len(message.command) < 3:
+        return await message.reply(
+            "Use:\n/setstartbuttons ButtonName https://link.com"
+        )
+
+    name = message.command[1]
+    url = message.command[2]
+
+    data = await startdb.find_one({"bot_id": bot_id})
+
+    buttons = []
+
+    if data and data.get("buttons"):
+        buttons = data.get("buttons")
+
+    buttons.append({"name": name, "url": url})
+
+    await startdb.update_one(
+        {"bot_id": bot_id},
+        {"$set": {"buttons": buttons}},
+        upsert=True
+    )
+
+    await message.reply("✅ Button added")
+
+
 # PREVIEW
 @app.on_message(filters.command("previewstart") & filters.private)
 async def preview_start(client, message):
 
-    bot_id = client.me.id
+    bot = await client.get_me()
+    bot_id = bot.id
+
     data = await startdb.find_one({"bot_id": bot_id})
 
     if not data:
@@ -88,12 +198,16 @@ async def preview_start(client, message):
     text = data.get("text")
     photo = data.get("photo")
     video = data.get("video")
+    gif = data.get("gif")
 
     if photo:
         await message.reply_photo(photo, caption=text)
 
     elif video:
         await message.reply_video(video, caption=text)
+
+    elif gif:
+        await message.reply_animation(gif, caption=text)
 
     else:
         await message.reply(text)
@@ -103,7 +217,8 @@ async def preview_start(client, message):
 @app.on_message(filters.command("resetstart") & filters.private)
 async def reset_start(client, message):
 
-    bot_id = client.me.id
+    bot = await client.get_me()
+    bot_id = bot.id
     owner = get_owner_id_from_db(bot_id)
 
     if message.from_user.id != owner:
