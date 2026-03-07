@@ -56,6 +56,36 @@ suggestion = {}
 cleanmode = []
 
 
+# ---------------- CHANNEL PLAY MODE ---------------- #
+
+async def get_cmode(chat_id: int):
+
+    mode = channelconnect.get(chat_id)
+
+    if mode is not None:
+        return mode
+
+    data = await channeldb.find_one({"chat_id": chat_id})
+
+    if not data:
+        channelconnect[chat_id] = False
+        return False
+
+    channelconnect[chat_id] = data.get("mode", False)
+    return channelconnect[chat_id]
+
+
+async def set_cmode(chat_id: int, mode: bool):
+
+    channelconnect[chat_id] = mode
+
+    await channeldb.update_one(
+        {"chat_id": chat_id},
+        {"$set": {"mode": mode}},
+        upsert=True,
+    )
+
+
 # ---------------- QUERY COUNT ---------------- #
 
 async def get_queries():
@@ -132,240 +162,3 @@ async def get_assistant(chat_id: int):
     assistantdict[chat_id] = num
 
     return await get_client(num)
-
-
-# ---------------- SKIP MODE ---------------- #
-
-async def is_skipmode(chat_id: int):
-
-    mode = skipmode.get(chat_id)
-
-    if mode is None:
-
-        data = await skipdb.find_one({"chat_id": chat_id})
-
-        if not data:
-            skipmode[chat_id] = True
-            return True
-
-        skipmode[chat_id] = False
-        return False
-
-    return mode
-
-
-async def skip_on(chat_id: int):
-
-    skipmode[chat_id] = True
-
-    await skipdb.delete_one({"chat_id": chat_id})
-
-
-async def skip_off(chat_id: int):
-
-    skipmode[chat_id] = False
-
-    await skipdb.update_one(
-        {"chat_id": chat_id},
-        {"$set": {"chat_id": chat_id}},
-        upsert=True,
-    )
-
-
-# ---------------- LANGUAGE ---------------- #
-
-async def get_lang(chat_id: int):
-
-    mode = langm.get(chat_id)
-
-    if mode:
-        return mode
-
-    data = await langdb.find_one({"chat_id": chat_id})
-
-    if not data:
-        langm[chat_id] = "en"
-        return "en"
-
-    langm[chat_id] = data.get("lang", "en")
-
-    return langm[chat_id]
-
-
-async def set_lang(chat_id: int, lang: str):
-
-    langm[chat_id] = lang
-
-    await langdb.update_one(
-        {"chat_id": chat_id},
-        {"$set": {"lang": lang}},
-        upsert=True,
-    )
-
-
-# ---------------- MUSIC STATE ---------------- #
-
-async def is_music_playing(chat_id: int):
-    return pause.get(chat_id, False)
-
-
-async def music_on(chat_id: int):
-    pause[chat_id] = True
-
-
-async def music_off(chat_id: int):
-    pause[chat_id] = False
-
-
-# ---------------- MUTE ---------------- #
-
-async def is_muted(chat_id: int):
-    return mute.get(chat_id, False)
-
-
-async def mute_on(chat_id: int):
-    mute[chat_id] = True
-
-
-async def mute_off(chat_id: int):
-    mute[chat_id] = False
-
-
-# ---------------- ACTIVE CHATS ---------------- #
-
-async def get_active_chats():
-    return active
-
-
-async def add_active_chat(chat_id: int):
-    if chat_id not in active:
-        active.append(chat_id)
-
-
-async def remove_active_chat(chat_id: int):
-    if chat_id in active:
-        active.remove(chat_id)
-
-
-# ---------------- CLONE USERS ---------------- #
-
-async def add_served_user_clone(user_id: int, bot_id: int):
-
-    data = await usersdbc.find_one(
-        {"user_id": user_id, "bot_id": bot_id}
-    )
-
-    if not data:
-        await usersdbc.insert_one(
-            {"user_id": user_id, "bot_id": bot_id}
-        )
-
-
-async def get_served_users_clone(bot_id: int):
-
-    return [
-        user async for user in usersdbc.find({"bot_id": bot_id})
-    ]
-
-
-async def add_served_chat_clone(chat_id: int, bot_id: int):
-
-    data = await chatsdbc.find_one(
-        {"chat_id": chat_id, "bot_id": bot_id}
-    )
-
-    if not data:
-        await chatsdbc.insert_one(
-            {"chat_id": chat_id, "bot_id": bot_id}
-        )
-
-
-async def get_served_chats_clone(bot_id: int):
-
-    return [
-        chat async for chat in chatsdbc.find({"bot_id": bot_id})
-    ]
-
-
-# ---------------- START PANEL DATABASE ---------------- #
-
-startpicdb = mongodb.startpic
-startvideodb = mongodb.startvideo
-starttextdb = mongodb.starttext
-startbuttondb = mongodb.startbuttons
-
-
-async def set_start_pic(user_id: int, pic: str):
-
-    await startpicdb.update_one(
-        {"user_id": user_id},
-        {"$set": {"pic": pic}},
-        upsert=True,
-    )
-
-
-async def get_start_pic(user_id: int):
-
-    data = await startpicdb.find_one({"user_id": user_id})
-
-    if not data:
-        return None
-
-    return data["pic"]
-
-
-async def set_start_video(user_id: int, video: str):
-
-    await startvideodb.update_one(
-        {"user_id": user_id},
-        {"$set": {"video": video}},
-        upsert=True,
-    )
-
-
-async def get_start_video(user_id: int):
-
-    data = await startvideodb.find_one({"user_id": user_id})
-
-    if not data:
-        return None
-
-    return data["video"]
-
-
-async def set_start_text(user_id: int, text: str):
-
-    await starttextdb.update_one(
-        {"user_id": user_id},
-        {"$set": {"text": text}},
-        upsert=True,
-    )
-
-
-async def get_start_text(user_id: int):
-
-    data = await starttextdb.find_one({"user_id": user_id})
-
-    if not data:
-        return None
-
-    return data["text"]
-
-
-async def set_start_buttons(user_id: int, buttons: list):
-
-    await startbuttondb.update_one(
-        {"user_id": user_id},
-        {"$set": {"buttons": buttons}},
-        upsert=True,
-    )
-
-
-async def get_start_buttons(user_id: int):
-
-    data = await startbuttondb.find_one({"user_id": user_id})
-
-    if not data:
-        return None
-
-    return data["buttons"]
