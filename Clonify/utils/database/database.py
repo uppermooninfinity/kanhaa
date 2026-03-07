@@ -162,3 +162,12 @@ async def get_assistant(chat_id: int):
     assistantdict[chat_id] = num
 
     return await get_client(num)
+# ---------------- AUTH USER NAMES ---------------- #
+
+async def get_authuser_names():
+    """
+    Returns a list of usernames from the authuser database
+    """
+    users = await authuserdb.find({}).to_list(length=None)
+    return [user.get("username") for user in users if "username" in user]
+
