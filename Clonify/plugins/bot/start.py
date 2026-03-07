@@ -8,7 +8,7 @@ from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
 
 import config
 from Clonify import app
-from Clonifymisc import _boot_
+from Clonify.misc import _boot_
 from Clonify.plugins.sudo.sudoers import sudoers_list
 from Clonify.utils.database import (
     add_served_chat,
