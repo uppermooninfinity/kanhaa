@@ -157,15 +157,15 @@ confirmer = {}
 # -----------------------------------------------------
 SUPERBAN_VIDEO = "https://litter.catbox.moe/90xmzlql8un278km.mp4"
 STREAMI_PICS = [
-    "https://files.catbox.moe/4q7c4w.jpg",
-    "https://files.catbox.moe/90z6sq.jpg",
-    "https://files.catbox.moe/rdfi4z.jpg",
-    "https://files.catbox.moe/6f9rgp.jpg",
-    "https://files.catbox.moe/99wj12.jpg",
-    "https://files.catbox.moe/ezpnd2.jpg",
-    "https://files.catbox.moe/e7q55f.jpg",
-    "https://files.catbox.moe/qyfsi7.jpg",
-    "https://files.catbox.moe/kbke7s.jpg",
+    "https://graph.org/file/c53dfca85e9e0b5bc9cd1-afa1339cd5d4e6522c.jpg",
+    "https://graph.org/file/c53dfca85e9e0b5bc9cd1-afa1339cd5d4e6522c.jpg",
+    "https://graph.org/file/c53dfca85e9e0b5bc9cd1-afa1339cd5d4e6522c.jpg",
+    "https://graph.org/file/c53dfca85e9e0b5bc9cd1-afa1339cd5d4e6522c.jpg",
+    "https://graph.org/file/c53dfca85e9e0b5bc9cd1-afa1339cd5d4e6522c.jpg",
+    "https://graph.org/file/c53dfca85e9e0b5bc9cd1-afa1339cd5d4e6522c.jpg",
+    "https://graph.org/file/c53dfca85e9e0b5bc9cd1-afa1339cd5d4e6522c.jpg",
+    "https://graph.org/file/c53dfca85e9e0b5bc9cd1-afa1339cd5d4e6522c.jpg",
+    "https://graph.org/file/c53dfca85e9e0b5bc9cd1-afa1339cd5d4e6522c.jpg",
     "https://files.catbox.moe/7icvpu.jpg",
     "https://files.catbox.moe/4hd77z.jpg",
     "https://files.catbox.moe/yn7wje.jpg",
@@ -181,17 +181,17 @@ STREAMI_PICS = [
 # IMAGE URLS
 # -----------------------------------------------------
 
-HELP_IMG_URL = getenv(
+HELP_IMG_URL = os.getenv(
     "HELP_IMG_URL",
     "https://i.ibb.co/xPjc7tv/help-menu.jpg"
 )
 
-START_IMG_URL = getenv(
+START_IMG_URL = os.getenv(
     "START_IMG_URL",
-    "https://files.catbox.moe/fu6jk3.jpg"
+    "https://graph.org/file/c53dfca85e9e0b5bc9cd1-afa1339cd5d4e6522c.jpg"
 )
 
-PING_IMG_URL = getenv(
+PING_IMG_URL = os.getenv(
     "PING_IMG_URL",
     "https://files.catbox.moe/26nzoq.jpg"
 )
