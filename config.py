@@ -22,7 +22,7 @@ BOT_USERNAME = os.getenv("BOT_USERNAME", "astral_xbot")
 BOT_NAME = os.getenv("BOT_NAME", "🎧 Uᴘᴘᴇʀ ᴍᴏᴏɴ")
 
 ASSUSERNAME = os.getenv("ASSUSERNAME", "mrs_radha")
-SUPERBAN_ADMINS = list(map(int, os.getenv("SUPERBAN_ADMINS", "7651303468,8285730532,8566964639").split()))
+SUPERBAN_ADMINS = list(map(int, os.getenv("SUPERBAN_ADMINS", "7651303468,8285730532,8566964639").replace(",", " ").split()))
 SUPERBAN_LOG_GC = int(os.getenv("SUPERBAN_LOG_GC", -1003882647583))
 SUPERBAN_CHANNEL = int(os.getenv("SUPERBAN_CHANNEL", -1003647170816))
 
