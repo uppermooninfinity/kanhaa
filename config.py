@@ -65,24 +65,24 @@ HEROKU_API_KEY = os.getenv("HEROKU_API_KEY", "")
 
 SOURCE = os.getenv("SOURCE", "https://github.com//theteaminfinitybots/team-infinity-bots")
 
-UPSTREAM_REPO = getenv(
+UPSTREAM_REPO = os.getenv(
     "UPSTREAM_REPO",
     "https://github.com/uppermooninfinity/kanhaa",
 )
 
-UPSTREAM_BRANCH = getenv("UPSTREAM_BRANCH", "main")
+UPSTREAM_BRANCH = os.getenv("UPSTREAM_BRANCH", "main")
 
-GIT_TOKEN = getenv("GIT_TOKEN", "")
+GIT_TOKEN = os.getenv("GIT_TOKEN", "")
 
 # -----------------------------------------------------
 # SUPPORT
 # -----------------------------------------------------
 
-SUPPORT_CHANNEL = getenv(
+SUPPORT_CHANNEL = os.getenv(
     "SUPPORT_CHANNEL", "https://t.me/dark_musictm"
 )
 
-SUPPORT_CHAT = getenv(
+SUPPORT_CHAT = os.getenv(
     "SUPPORT_CHAT", "https://t.me/snowy_hometown"
 )
 
@@ -90,35 +90,35 @@ SUPPORT_CHAT = getenv(
 # ASSISTANT SETTINGS
 # -----------------------------------------------------
 
-AUTO_LEAVING_ASSISTANT = getenv(
+AUTO_LEAVING_ASSISTANT = os.getenv(
     "AUTO_LEAVING_ASSISTANT", "False"
 ).lower() == "true"
 
 AUTO_LEAVE_ASSISTANT_TIME = int(
-    getenv("ASSISTANT_LEAVE_TIME", "9000")
+    os.getenv("ASSISTANT_LEAVE_TIME", "9000")
 )
 
 SONG_DOWNLOAD_DURATION = int(
-    getenv("SONG_DOWNLOAD_DURATION", "9999999")
+    os.getenv("SONG_DOWNLOAD_DURATION", "9999999")
 )
 
 SONG_DOWNLOAD_DURATION_LIMIT = int(
-    getenv("SONG_DOWNLOAD_DURATION_LIMIT", "9999999")
+    os.getenv("SONG_DOWNLOAD_DURATION_LIMIT", "9999999")
 )
 
 # -----------------------------------------------------
 # SPOTIFY
 # -----------------------------------------------------
 
-SPOTIFY_CLIENT_ID = getenv("SPOTIFY_CLIENT_ID", "")
-SPOTIFY_CLIENT_SECRET = getenv("SPOTIFY_CLIENT_SECRET", "")
+SPOTIFY_CLIENT_ID = os.getenv("SPOTIFY_CLIENT_ID", "")
+SPOTIFY_CLIENT_SECRET = os.getenv("SPOTIFY_CLIENT_SECRET", "")
 
 # -----------------------------------------------------
 # PLAYLIST
 # -----------------------------------------------------
 
 PLAYLIST_FETCH_LIMIT = int(
-    getenv("PLAYLIST_FETCH_LIMIT", "25")
+    os.getenv("PLAYLIST_FETCH_LIMIT", "25")
 )
 
 # -----------------------------------------------------
@@ -126,19 +126,19 @@ PLAYLIST_FETCH_LIMIT = int(
 # -----------------------------------------------------
 
 TG_AUDIO_FILESIZE_LIMIT = int(
-    getenv("TG_AUDIO_FILESIZE_LIMIT", "5242880000")
+    os.getenv("TG_AUDIO_FILESIZE_LIMIT", "5242880000")
 )
 
 TG_VIDEO_FILESIZE_LIMIT = int(
-    getenv("TG_VIDEO_FILESIZE_LIMIT", "5242880000")
+    os.getenv("TG_VIDEO_FILESIZE_LIMIT", "5242880000")
 )
 
 # -----------------------------------------------------
 # SESSION STRINGS
 # -----------------------------------------------------
 
-STRING1 = getenv("STRING_SESSION", "")
-STRING2 = getenv("STRING_SESSION2", None)
+STRING1 = os.getenv("STRING_SESSION", "")
+STRING2 = os.getenv("STRING_SESSION2", None)
 
 # -----------------------------------------------------
 # GLOBAL LISTS
@@ -155,7 +155,7 @@ confirmer = {}
 # -----------------------------------------------------
 # STREAM IMAGES
 # -----------------------------------------------------
-
+SUPERBAN_VIDEO = "https://litter.catbox.moe/90xmzlql8un278km.mp4"
 STREAMI_PICS = [
     "https://files.catbox.moe/4q7c4w.jpg",
     "https://files.catbox.moe/90z6sq.jpg",
