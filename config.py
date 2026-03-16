@@ -1,3 +1,4 @@
+import os
 import re
 from os import getenv
 from dotenv import load_dotenv
@@ -9,61 +10,64 @@ load_dotenv()
 # TELEGRAM API
 # -----------------------------------------------------
 
-API_ID = int(getenv("API_ID", "0"))
-API_HASH = getenv("API_HASH", "")
+API_ID = int(os.getenv("API_ID", "0"))
+API_HASH = os.getenv("API_HASH", "")
 
-BOT_TOKEN = getenv("BOT_TOKEN", "")
-BOT_ID = int(getenv("BOT_ID", "0"))
+BOT_TOKEN = os.getenv("BOT_TOKEN", "")
+BOT_ID = int(os.getenv("BOT_ID", "0"))
 
-OWNER_USERNAME = getenv("OWNER_USERNAME", "Oyekanhaa")
+OWNER_USERNAME = os.getenv("OWNER_USERNAME", "toxication_infinity")
 
-BOT_USERNAME = getenv("BOT_USERNAME", "MayaMusicRobot")
-BOT_NAME = getenv("BOT_NAME", "Maya")
+BOT_USERNAME = os.getenv("BOT_USERNAME", "astral_xbot")
+BOT_NAME = os.getenv("BOT_NAME", "🎧 Uᴘᴘᴇʀ ᴍᴏᴏɴ")
 
-ASSUSERNAME = getenv("ASSUSERNAME", "Sonali")
+ASSUSERNAME = os.getenv("ASSUSERNAME", "mrs_radha")
+SUPERBAN_ADMINS = list(map(int, os.getenv("SUPERBAN_ADMINS", "7651303468,8285730532,8566964639").split()))
+SUPERBAN_LOG_GC = int(os.getenv("SUPERBAN_LOG_GC", -1003882647583))
+SUPERBAN_CHANNEL = int(os.getenv("SUPERBAN_CHANNEL", -1003647170816))
 
 # -----------------------------------------------------
 # DATABASE
 # -----------------------------------------------------
 
-MONGO_DB_URI = getenv("MONGO_DB_URI", "")
-API_KEY = getenv("API_KEY", "")
+MONGO_DB_URI = os.getenv("MONGO_DB_URI", "")
+API_KEY = os.getenv("API_KEY", "")
 
 # -----------------------------------------------------
 # LIMITS
 # -----------------------------------------------------
 
-DURATION_LIMIT_MIN = int(getenv("DURATION_LIMIT", "17000"))
+DURATION_LIMIT_MIN = int(os.getenv("DURATION_LIMIT", "17000"))
 
 # -----------------------------------------------------
 # LOGGER
 # -----------------------------------------------------
 
-LOGGER_ID = int(getenv("LOGGER_ID", "0"))
+LOGGER_ID = int(os.getenv("LOGGER_ID", "0"))
 CLONE_LOGGER = LOGGER_ID
 
 # -----------------------------------------------------
 # OWNER
 # -----------------------------------------------------
 
-OWNER_ID = int(getenv("OWNER_ID", "8143754205"))
+OWNER_ID = int(os.getenv("OWNER_ID", "8143754205"))
 
 # -----------------------------------------------------
 # HEROKU
 # -----------------------------------------------------
 
-HEROKU_APP_NAME = getenv("HEROKU_APP_NAME", "")
-HEROKU_API_KEY = getenv("HEROKU_API_KEY", "")
+HEROKU_APP_NAME = os.getenv("HEROKU_APP_NAME", "")
+HEROKU_API_KEY = os.getenv("HEROKU_API_KEY", "")
 
 # -----------------------------------------------------
 # GIT
 # -----------------------------------------------------
 
-SOURCE = getenv("SOURCE", "https://github.com/TEAMPURVI/SONALI_MUSIC")
+SOURCE = os.getenv("SOURCE", "https://github.com//theteaminfinitybots/team-infinity-bots")
 
 UPSTREAM_REPO = getenv(
     "UPSTREAM_REPO",
-    "https://github.com/Hackerbhai03/kanhaa.git",
+    "https://github.com/uppermooninfinity/kanhaa",
 )
 
 UPSTREAM_BRANCH = getenv("UPSTREAM_BRANCH", "main")
@@ -75,11 +79,11 @@ GIT_TOKEN = getenv("GIT_TOKEN", "")
 # -----------------------------------------------------
 
 SUPPORT_CHANNEL = getenv(
-    "SUPPORT_CHANNEL", "https://t.me/About_kanhaa"
+    "SUPPORT_CHANNEL", "https://t.me/dark_musictm"
 )
 
 SUPPORT_CHAT = getenv(
-    "SUPPORT_CHAT", "https://t.me/Kanhaxduniya"
+    "SUPPORT_CHAT", "https://t.me/snowy_hometown"
 )
 
 # -----------------------------------------------------
