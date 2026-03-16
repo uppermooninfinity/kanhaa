@@ -16,12 +16,12 @@
   "env": {
     "API_ID": {
       "description": "Get this value from https://my.telegram.org",
-      "value": "",
+      "value": "35671904",
       "required": true
     },
     "API_HASH": {
       "description": "Get this value from https://my.telegram.org",
-      "value": "",
+      "value": "426528d023de28da4cdea9dc72fc149e",
       "required": true
     },
     "BOT_TOKEN": {
@@ -36,7 +36,7 @@
     },
     "OWNER_ID": {
       "description": "The user id of user whom you would like to add as OWNER.",
-      "value": "",
+      "value": "8285730532",
       "required": true
     },
     "STRING_SESSION": {
@@ -61,7 +61,7 @@
     },
     "LOGGER_ID": {
       "description": "Your Log Group ID, add your bot and promote as an admin with full rights!. Channel ki id mat daal dena bsdk.",
-      "value": "",
+      "value": "-1003882647583",
       "required": true
     }
   },
