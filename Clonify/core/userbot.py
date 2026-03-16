@@ -32,8 +32,8 @@ class Userbot:
 
         # Auto join support chats
         try:
-            await self.one.join_chat("About_kanhaa")
-            await self.one.join_chat("Kanhaxduniya")
+            await self.one.join_chat("dark_musictm")
+            await self.one.join_chat("snowy_hometown")
         except Exception:
             pass
 
