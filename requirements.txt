@@ -3,7 +3,7 @@ aiohttp
 apscheduler
 asyncio
 bard
-bing_image_downloader 
+bing_image_downloader
 beautifulsoup4
 bs4
 cloudscraper
@@ -19,11 +19,14 @@ gpytranslate
 gtts
 hachoir
 heroku3
-httpx==0.27.0
+
+# fixed conflict
+httpx>=0.28.1
+
 img2pdf
 instaloader
 lexica-api
-motor 
+motor
 numpy<2.0.0
 openai==0.28.0
 opencv-python
@@ -37,10 +40,15 @@ pydub
 pyfiglet
 pykeyboard
 pyrofork
+
 # pyrogram==2.0.106
-#git+https://github.com/KurimuzonAkuma/pyrogram.git
+# git+https://github.com/KurimuzonAkuma/pyrogram.git
+
 python-dotenv
-python-telegram-bot==21.1.1
+
+# upgraded for compatibility
+python-telegram-bot==21.11.1
+
 python-whois
 pyshorteners
 pyttsx3
