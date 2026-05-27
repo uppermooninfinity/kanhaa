@@ -10,15 +10,15 @@ load_dotenv()
 # TELEGRAM API
 # -----------------------------------------------------
 
-API_ID = int(os.getenv("API_ID", "0"))
-API_HASH = os.getenv("API_HASH", "")
+API_ID = int(os.getenv("API_ID", "33745438"))
+API_HASH = os.getenv("API_HASH", "142eb5aab37976e2d39475b07e8e3212")
 
 BOT_TOKEN = os.getenv("BOT_TOKEN", "")
-BOT_ID = int(os.getenv("BOT_ID", "0"))
+BOT_ID = int(os.getenv("BOT_ID", "8956152153"))
 
-OWNER_USERNAME = os.getenv("OWNER_USERNAME", "toxication_infinity")
+OWNER_USERNAME = os.getenv("OWNER_USERNAME", "deafen_ackerman")
 
-BOT_USERNAME = os.getenv("BOT_USERNAME", "astral_xbot")
+BOT_USERNAME = os.getenv("BOT_USERNAME", "muichirorbot")
 BOT_NAME = os.getenv("BOT_NAME", "🎧 Uᴘᴘᴇʀ ᴍᴏᴏɴ")
 
 ASSUSERNAME = os.getenv("ASSUSERNAME", "mrs_radha")
@@ -30,7 +30,7 @@ SUPERBAN_CHANNEL = int(os.getenv("SUPERBAN_CHANNEL", -1003647170816))
 # DATABASE
 # -----------------------------------------------------
 
-MONGO_DB_URI = os.getenv("MONGO_DB_URI", "")
+MONGO_DB_URI = os.getenv("MONGO_DB_URI", "mongodb+srv://knight4563:knight4563@cluster0.a5br0se.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
 API_KEY = os.getenv("API_KEY", "")
 
 # -----------------------------------------------------
@@ -43,14 +43,14 @@ DURATION_LIMIT_MIN = int(os.getenv("DURATION_LIMIT", "17000"))
 # LOGGER
 # -----------------------------------------------------
 
-LOGGER_ID = int(os.getenv("LOGGER_ID", "0"))
+LOGGER_ID = int(os.getenv("LOGGER_ID", "-1003882647583"))
 CLONE_LOGGER = LOGGER_ID
 
 # -----------------------------------------------------
 # OWNER
 # -----------------------------------------------------
 
-OWNER_ID = int(os.getenv("OWNER_ID", "8143754205"))
+OWNER_ID = int(os.getenv("OWNER_ID", "8364692780"))
 
 # -----------------------------------------------------
 # HEROKU
@@ -79,11 +79,11 @@ GIT_TOKEN = os.getenv("GIT_TOKEN", "")
 # -----------------------------------------------------
 
 SUPPORT_CHANNEL = os.getenv(
-    "SUPPORT_CHANNEL", "https://t.me/dark_musictm"
+    "SUPPORT_CHANNEL", "https://t.me/theinfinitynetwork"
 )
 
 SUPPORT_CHAT = os.getenv(
-    "SUPPORT_CHAT", "https://t.me/snowy_hometown"
+    "SUPPORT_CHAT", "https://t.me/theinfinity_support"
 )
 
 # -----------------------------------------------------
